@@ -4,11 +4,15 @@
 #define USE_CHUNKING_METHOD 1
 
 int main(int argc, char** argv) {
-    // random file path 
-    char* random_file_path = "";
+    if (argc != 2) {
+        perror("No input file given");
+        exit(-1);
+    }
+
+    char* file_path = argv[1];
 
     // codes below are just for testing
-    FILE *random_file;
+    FILE *file;
 
     uint8_t SHA1_digest[20];
     uLong weakHash;
@@ -21,13 +25,13 @@ int main(int argc, char** argv) {
     int offset = 0, chunkLength = 0, readFlag = 0;
     fastCDC_init();
 
-    random_file = fopen(random_file_path, "r+");
-    if (random_file == NULL) {
+    file = fopen(file_path, "r+");
+    if (file == NULL) {
         perror("Fail to open file");
         exit(-1);
     }
 
-    readStatus = fread(fileCache, 1, CacheSize, random_file);
+    readStatus = fread(fileCache, 1, CacheSize, file);
 
     for (;;) {
         chunk_num += 1;
@@ -46,7 +50,7 @@ int main(int argc, char** argv) {
 
         if (CacheSize - offset < MaxSize) {
             memcpy(fileCache, fileCache + offset + 1, CacheSize - offset);
-            readStatus = fread(fileCache + CacheSize - offset, 1, offset, random_file);
+            readStatus = fread(fileCache + CacheSize - offset, 1, offset, file);
             end = CacheSize - 1 - offset + readStatus;
 
             if (readStatus < offset + 1) {
