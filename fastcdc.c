@@ -115,7 +115,7 @@ void fastCDC_init(void) {
 
     // 64 bit init
     for (int i = 0; i < SymbolCount; i++) {
-        LEARv2[i] = GEARv2[i] << 1;
+        ((uint64_t volatile *) LEARv2)[i] = GEARv2[i] << 1;
     }
 
     MinSize = 8192 / 4;
