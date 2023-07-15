@@ -29,29 +29,6 @@ int main(int argc, char** argv) {
 
     readStatus = fread(fileCache, 1, CacheSize, random_file);
 
-    switch (USE_CHUNKING_METHOD)
-    {
-        case ORIGIN_CDC:
-            chunking = cdc_origin_64;
-            break;
-
-        case ROLLING_2Bytes:
-            chunking = rolling_data_2byes_64;
-            break;
-        
-        case NORMALIZED_CDC:
-            chunking = normalized_chunking_64;
-            break;
-
-        case NORMALIZED_2Bytes:
-            chunking = normalized_chunking_2byes_64;
-            break;
-        
-        default:
-            printf(stderr, "No implement other chunking method");
-    }
-
-
     for (;;) {
         chunk_num += 1;
 
@@ -96,6 +73,28 @@ int main(int argc, char** argv) {
 
 // functions
 void fastCDC_init(void) {
+    switch (USE_CHUNKING_METHOD)
+    {
+        case ORIGIN_CDC:
+            chunking = cdc_origin_64;
+            break;
+
+        case ROLLING_2Bytes:
+            chunking = rolling_data_2byes_64;
+            break;
+
+        case NORMALIZED_CDC:
+            chunking = normalized_chunking_64;
+            break;
+
+        case NORMALIZED_2Bytes:
+            chunking = normalized_chunking_2byes_64;
+            break;
+
+        default:
+            printf(stderr, "No implement other chunking method");
+    }
+
     unsigned char md5_digest[16];
     uint8_t seed[SeedLength];
     for (int i = 0; i < SymbolCount; i++) {
